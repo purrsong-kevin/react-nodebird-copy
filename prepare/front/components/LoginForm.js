@@ -1,9 +1,11 @@
-import React, { useCallback, useState, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Form, Input, Button } from 'antd'
 import Link from 'next/link';
 import styled from 'styled-components';
-import useInput from './hooks/useInput';
+import { useDispatch, useSelector } from 'react-redux';
+
+import useInput from '../hooks/useInput';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -13,24 +15,36 @@ const FormWrapper = styled(Form)`
   padding: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }) => {
-  const [id, onChangeId] = useInput('');
-  const [password, onChangePassword] = useInput('');
+const LoginForm = () => {
+  const dispatch = useDispatch();
+  const { logInLoading, logInError } = useSelector(state => state.user);
+
+  const [email, onChangeEmail] = useInput('kevin@test.com');
+  const [password, onChangePassword] = useInput('1234');
+
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
 
   const onSubmitForm = useCallback((e) => {
     // e.preventDefault(); 쓰면 안됨 antd Form의 onFinish에는 이미 적용되어 있음
-    console.log("ID, Password", id, password);
-    setIsLoggedIn(true);
-  }, [id, password]);
+    console.log("ID, Password", email, password);
+    dispatch({
+      type: LOG_IN_REQUEST,
+      data: { email, password }
+    });
+  }, [email, password]);
 
   // const style = useMemo(() => ({ marginTop: 10 }), []);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">ID</label>
+        <label htmlFor="user-email">E-mail</label>
         <br />
-        <Input name="user-id" value={id} onChange={onChangeId} required />
+        <Input name="user-email" type="email" value={email} onChange={onChangeEmail} required />
       </div>
       <div>
         <label htmlFor="user-password">Password</label>
@@ -43,15 +57,11 @@ const LoginForm = ({ setIsLoggedIn }) => {
         />
       </div>
       <ButtonWrapper /* style={style} */>
-        <Button type="primary" htmlType="submit" loading={false}>Login</Button>
+        <Button type="primary" htmlType="submit" loading={logInLoading}>Login</Button>
         <Link href="/signup"><a><Button>Signup</Button></a></Link>
       </ButtonWrapper>
     </FormWrapper>
   );
-};
-
-LoginForm.propTypes = {
-  setIsLoggedIn: PropTypes.func.isRequired
 };
 
 export default LoginForm;
