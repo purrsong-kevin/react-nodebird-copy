@@ -61,7 +61,6 @@ const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const hashtagRouter = require('./routes/hashtag');
-const { frontUrl } = require('./config/frontUrl');
 
 app.get('/', (req, res) => {
   res.send('Hello Express');
