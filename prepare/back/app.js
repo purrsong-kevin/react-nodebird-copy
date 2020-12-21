@@ -32,7 +32,7 @@ else {
   app.use(morgan('dev'));
 }
 app.use(cors({
-  origin: ['http://localhost:3060', 'nodebird.com', frontUrl],
+  origin: ['http://localhost:3060', frontUrl],
   credentials: true   // 쿠키 전달 여부
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads')));
@@ -42,7 +42,12 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
   saveUninitialized: false,
   resave: false,
-  secret: process.env.COOKIE_SECRET
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    domain: process.env.NODE_ENV === 'production' && '.purrsong-dev.com'
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
