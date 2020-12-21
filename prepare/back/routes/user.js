@@ -7,6 +7,8 @@ const { Op } = require('sequelize');
 const { User, Post, Image, Comment } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
+const { frontUrl } = require('../config/frontUrl');
+
 router.get('/', async (req ,res ,next) => {   // GET /user
   try {
     if (req.user) {
@@ -213,7 +215,7 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {    // POST /user/
       nickname: req.body.nickname,
       password: hashedPassword
     });
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3060');    // 모든 서버는 '*';
+    res.setHeader('Access-Control-Allow-Origin', frontUrl);    // 모든 서버는 '*';
     return res.status(201).send('ok');
   }
   catch (error) {

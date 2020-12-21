@@ -12,6 +12,7 @@ const helmet = require('helmet');
 
 const app = express();
 const db = require('./models');
+const { frontUrl } = require('./config/frontUrl');
 
 db.sequelize.sync()
   .then(() => {
@@ -31,7 +32,7 @@ else {
   app.use(morgan('dev'));
 }
 app.use(cors({
-  origin: ['http://localhost:3060', 'nodebird.com', 'http://13.209.77.129'],
+  origin: ['http://localhost:3060', 'nodebird.com', frontUrl],
   credentials: true   // 쿠키 전달 여부
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads')));
@@ -60,6 +61,7 @@ const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const hashtagRouter = require('./routes/hashtag');
+const { frontUrl } = require('./config/frontUrl');
 
 app.get('/', (req, res) => {
   res.send('Hello Express');
