@@ -1,7 +1,9 @@
 const router = require('express').Router();
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
 const { Post, Image, Comment, User, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
@@ -14,19 +16,36 @@ catch (error) {
   fs.mkdirSync('uploads');
 }
 
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2'
+});
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads');
-    },
-    filename(req, file, done) {   // 케빈.png
-      const ext = path.extname(file.originalname);    // 확장자 추출
-      const basename = path.basename(file.originalname, ext);   // 케빈
-      done(null, basename + '_' + new Date().getTime() + ext);    // 케빈1234512312312.png
+  storage: multerS3({
+    s3: new AWS.s3(),
+    bucket: 'react-nodebird-copy',
+    key(req, file, cb) {
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
     }
   }),
   limits: { fileSize: 20 * 1024 * 1024 }    // 20MB
 });
+
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination(req, file, done) {
+//       done(null, 'uploads');
+//     },
+//     filename(req, file, done) {   // 케빈.png
+//       const ext = path.extname(file.originalname);    // 확장자 추출
+//       const basename = path.basename(file.originalname, ext);   // 케빈
+//       done(null, basename + '_' + new Date().getTime() + ext);    // 케빈1234512312312.png
+//     }
+//   }),
+//   limits: { fileSize: 20 * 1024 * 1024 }    // 20MB
+// });
 
 router.get('/:postId', async (req, res, next) => {   // GET /post/1
   try {
@@ -124,7 +143,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {   // POS
 
 router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => {    // POST /post/images
   console.log("uploads: ", req.files);
-  return res.json(req.files.map(v => v.filename));
+  return res.json(req.files.map(v => v.location));
 });
 
 router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // Post /post/1/retweet
