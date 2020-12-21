@@ -1,7 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
-import { backUrl } from '../config/config';
 
 import ImagesZoom from './ImagesZoom';
 

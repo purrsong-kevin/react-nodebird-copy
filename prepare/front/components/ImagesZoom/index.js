@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Slick from 'react-slick';
-import { backUrl } from '../../config/config';
 
 import { Overlay, Global, Header, SlickWrapper, ImgWrapper, CloseBtn, Indicator } from './stlyes';
 
