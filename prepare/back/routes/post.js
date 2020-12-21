@@ -143,7 +143,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {   // POS
 
 router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => {    // POST /post/images
   console.log("uploads: ", req.files);
-  return res.json(req.files.map(v => v.location));
+  return res.json(req.files.map(v => v.location.replace(/\/original\//, '/thumb/')));
 });
 
 router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // Post /post/1/retweet
