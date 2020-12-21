@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require('helmet');
 
 const app = express();
 const db = require('./models');
@@ -20,9 +22,16 @@ db.sequelize.sync()
 dotenv.config();
 passportConfig();
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV = 'production') {
+  app.use(morgan('combined'));
+  app.use(hpp());
+  app.use(helmet());
+}
+else {
+  app.use(morgan('dev'));
+}
 app.use(cors({
-  origin: 'http://localhost:3060',
+  origin: ['http://localhost:3060', 'nodebird.com'],
   credentials: true   // 쿠키 전달 여부
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads')));
