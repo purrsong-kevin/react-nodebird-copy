@@ -108,7 +108,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case UPLOAD_IMAGES_SUCCESS: {
       draft.uoloadImagesLoading = false;
-      draft.imagePaths.concat(action.data);
+      draft.imagePaths = draft.imagePaths.concat(action.data);
       draft.uoloadImagesDone = true;
       break;
     }
