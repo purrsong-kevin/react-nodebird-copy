@@ -31,7 +31,7 @@ else {
   app.use(morgan('dev'));
 }
 app.use(cors({
-  origin: ['http://localhost:3060', 'nodebird.com'],
+  origin: ['http://localhost:3060', 'nodebird.com', 'http://13.209.77.129'],
   credentials: true   // 쿠키 전달 여부
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads')));
