@@ -1,1 +1,1 @@
-exports.frontUrl = 'http://purrsong-dev.com';
+exports.frontUrl = 'purrsong-dev.com';

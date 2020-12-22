@@ -1,1 +1,1 @@
-export const backUrl = 'http://api.purrsong-dev.com';
+export const backUrl = 'api.purrsong-dev.com';
