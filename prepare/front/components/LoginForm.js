@@ -30,7 +30,6 @@ const LoginForm = () => {
 
   const onSubmitForm = useCallback((e) => {
     // e.preventDefault(); 쓰면 안됨 antd Form의 onFinish에는 이미 적용되어 있음
-    console.log("ID, Password", email, password);
     dispatch({
       type: LOG_IN_REQUEST,
       data: { email, password }

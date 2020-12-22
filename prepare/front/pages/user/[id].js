@@ -19,7 +19,6 @@ const User = () => {
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
   const { userInfo } = useSelector(state => state.user);
-  console.log(444, userInfo)
 
   useEffect(() => {
     const onScroll = () => {
