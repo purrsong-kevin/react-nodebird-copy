@@ -23,8 +23,9 @@ db.sequelize.sync()
 dotenv.config();
 passportConfig();
 
-app.set('trust proxy', 1);
+let sessionSecure;
 if (process.env.NODE_ENV = 'production') {
+  app.set('trust proxy', 1);
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
@@ -32,6 +33,7 @@ if (process.env.NODE_ENV = 'production') {
     origin: frontUrl,
     credentials: true   // 쿠키 전달 여부
   }));
+  sessionSecure = true;
 }
 else {
   app.use(morgan('dev'));
@@ -39,6 +41,7 @@ else {
     origin: true,
     credentials: true   // 쿠키 전달 여부
   }));
+  sessionSecure = false;
 }
 
 app.use('/', express.static(path.join(__dirname, 'uploads')));
@@ -52,7 +55,7 @@ app.use(session({
   proxy: true,
   cookie: {
     httpOnly: true,
-    secure: true,
+    secure: sessionSecure,
     domain: process.env.NODE_ENV === 'production' && '.purrsong-dev.com'
   }
 }));
