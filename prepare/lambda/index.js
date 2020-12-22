@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const sharp = require('sharp');
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3(); 
 
 exports.handler = async (event, context, callback) => {
   const Bucket = event.Records[0].s3.bucket.name;   // react-nodebird-copy
@@ -23,7 +23,7 @@ exports.handler = async (event, context, callback) => {
       Bucket,
       Key: `thumb/${filename}`,
       Body: resizedImage
-    });
+    }).promise();
     console.log('put', resizedImage.length);
     return callback(null, `thumb/${filename}`);
   }
